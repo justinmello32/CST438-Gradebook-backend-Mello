@@ -2,16 +2,19 @@ package com.cst438.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -152,43 +155,43 @@ public class GradeBookController {
 		
 	}
 
-	/* Add a new assignment for the course. The assignment has a name and a due date. */
-	@PutMapping("/assignment/")
+//	/* Add a new assignment for the course. The assignment has a name and a due date. */
+//	@PutMapping("/assignment/")
+//	@Transactional
+//	public void addNewAssignment (@RequestBody AssignmentDTO assignment, @PathVariable("name") String assignmentName, @PathVariable("due_date"), Integer dueDate) {
+//		
+//		//Create new assignment object
+//		AssignmentDTO assignment = new AssignmentDTO();
+//
+//		//Set information, name and due date, then save record
+//		assignment.name = assignmentName;
+//		assignment.due_date = dueDate;
+//		assignmentRepository.save(assignment);
+//	}
+//
+//	/* Change the name of the assignment for my course */
+	@PutMapping("/assignment/{assignmentId}")
 	@Transactional
-	public void addNewAssignment (@RequestBody AssignmentDTO assignment, @PathVariable("id") Integer assignmentId, @PathVariable("name") String assignmentName, @PathVariable("due_date"), Integer dueDate) {
-		
-		//Create new assignment object
-		AssignmentDTO assignment = new AssignmentDTO();
-
-		//Set information, name and due date, then save record
-		assignment.name = assignmentName;
-		assignment.due_date = dueDate;
-		assignmentRepository.save(assignment);
-	}
-
-	/* Change the name of the assignment for my course */
-	@PutMapping("/assignment/{id}")
-	@Transactional
-	public void changeAssignmentName(@RequestBody AssignmentDTO assignment, @PathVariable("id") Integer assignmentId, @PathVariable("name") String assignmentName) {
+	public void changeAssignmentName(@PathVariable int assignmentId, @RequestParam String name) {
 		
 		//Find assignment by ID
 		Assignment assignment = assignmentRepository.findById(assignmentId);
 
 		//Update assignment name and save record
-		assignment.name = assignmentName;
+		assignment.setName(name);
 		assignmentRepository.save(assignment);
 	}
 
-	/* Delete an assignment for the course (only if there are no grades for the assignment) */
-	@DeleteMapping("/assignment/{id}")
+//	/* Delete an assignment for the course (only if there are no grades for the assignment) */
+	@DeleteMapping("/assignment/{assignmentId}")
 	@Transactional
-	public void deleteAssignment(@RequestBody AssignmentDTO assignment, @PathVariable("id") Integer assignmentId) {
+	public void deleteAssignment(@PathVariable int assignmentId) {
 		
 		//Find assignment by ID
 		Assignment assignment = assignmentRepository.findById(assignmentId);
 
 		//TODO: Check if assignment has no grades first before deletion
-
+		
 		//Delete assignment 
 		assignmentRepository.delete(assignment);
 	}
