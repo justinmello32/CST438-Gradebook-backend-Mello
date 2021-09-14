@@ -156,7 +156,11 @@ public class GradeBookController {
 	@PutMapping("/assignment/")
 	@Transactional
 	public void addNewAssignment (@RequestBody AssignmentDTO assignment, @PathVariable("id") Integer assignmentId, @PathVariable("name") String assignmentName, @PathVariable("due_date"), Integer dueDate) {
+		
+		//Create new assignment object
 		AssignmentDTO assignment = new AssignmentDTO();
+
+		//Set information, name and due date, then save record
 		assignment.name = assignmentName;
 		assignment.due_date = dueDate;
 		assignmentRepository.save(assignment);
@@ -166,16 +170,26 @@ public class GradeBookController {
 	@PutMapping("/assignment/{id}")
 	@Transactional
 	public void changeAssignmentName(@RequestBody AssignmentDTO assignment, @PathVariable("id") Integer assignmentId, @PathVariable("name") String assignmentName) {
+		
+		//Find assignment by ID
 		Assignment assignment = assignmentRepository.findById(assignmentId);
+
+		//Update assignment name and save record
 		assignment.name = assignmentName;
 		assignmentRepository.save(assignment);
 	}
 
 	/* Delete an assignment for the course (only if there are no grades for the assignment) */
-	@PutMapping("/assignment/{id}")
+	@DeleteMapping("/assignment/{id}")
 	@Transactional
 	public void deleteAssignment(@RequestBody AssignmentDTO assignment, @PathVariable("id") Integer assignmentId) {
+		
+		//Find assignment by ID
 		Assignment assignment = assignmentRepository.findById(assignmentId);
+
+		//TODO: Check if assignment has no grades first before deletion
+
+		//Delete assignment 
 		assignmentRepository.delete(assignment);
 	}
 
