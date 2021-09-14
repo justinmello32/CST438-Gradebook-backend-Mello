@@ -1,5 +1,6 @@
 package com.cst438.controllers;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -156,19 +157,19 @@ public class GradeBookController {
 	}
 
 //	/* Add a new assignment for the course. The assignment has a name and a due date. */
-//	@PutMapping("/assignment/")
-//	@Transactional
-//	public void addNewAssignment (@RequestBody AssignmentDTO assignment, @PathVariable("name") String assignmentName, @PathVariable("due_date"), Integer dueDate) {
-//		
-//		//Create new assignment object
-//		AssignmentDTO assignment = new AssignmentDTO();
-//
-//		//Set information, name and due date, then save record
-//		assignment.name = assignmentName;
-//		assignment.due_date = dueDate;
-//		assignmentRepository.save(assignment);
-//	}
-//
+	@PostMapping("/assignment")
+	@Transactional
+	public void addNewAssignment (@RequestParam String name, @RequestParam Date dueDate) {
+		
+		//Create new assignment object
+		Assignment assignment = new Assignment();
+
+		//Set information, name and due date, then save record
+		assignment.setName(name);
+		assignment.setDueDate(dueDate);
+		assignmentRepository.save(assignment);
+	}
+
 //	/* Change the name of the assignment for my course */
 	@PutMapping("/assignment/{assignmentId}")
 	@Transactional
@@ -183,18 +184,18 @@ public class GradeBookController {
 	}
 
 //	/* Delete an assignment for the course (only if there are no grades for the assignment) */
-	@DeleteMapping("/assignment/{assignmentId}")
-	@Transactional
-	public void deleteAssignment(@PathVariable int assignmentId) {
-		
-		//Find assignment by ID
-		Assignment assignment = assignmentRepository.findById(assignmentId);
-
-		//TODO: Check if assignment has no grades first before deletion
-		
-		//Delete assignment 
-		assignmentRepository.delete(assignment);
-	}
+//	@DeleteMapping("/assignment/{assignmentId}")
+//	@Transactional
+//	public void deleteAssignment(@PathVariable int assignmentId) {
+//		
+//		//Find assignment by ID
+//		Assignment assignment = assignmentRepository.findById(assignmentId);
+//
+//		//TODO: Check if assignment has no grades first before deletion
+//		
+//		//Delete assignment 
+//		assignmentRepository.delete(assignment);
+//	}
 
 	
 	private Assignment checkAssignment(int assignmentId, String email) {
