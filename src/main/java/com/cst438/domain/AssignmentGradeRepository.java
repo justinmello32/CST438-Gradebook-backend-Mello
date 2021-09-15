@@ -10,5 +10,5 @@ public interface AssignmentGradeRepository extends CrudRepository <AssignmentGra
 	
 	@Query("select a from AssignmentGrade a where a.id=:id")
 	AssignmentGrade findById(int id);
-
+	
 }

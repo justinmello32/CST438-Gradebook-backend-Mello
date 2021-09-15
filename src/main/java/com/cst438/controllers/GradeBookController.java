@@ -155,11 +155,15 @@ public class GradeBookController {
 		}
 		
 	}
-
-//	/* Add a new assignment for the course. The assignment has a name and a due date. */
+	
+	/* Add a new assignment for the course. The assignment has a name and a due date. */
 	@PostMapping("/assignment")
 	@Transactional
 	public void addNewAssignment (@RequestParam String name, @RequestParam Date dueDate) {
+		
+		String email = "dwisneski@csumb.edu"; //Hardcoded email
+		
+		if(email == "dwisneski@csumb.edu") {
 		
 		//Create new assignment object
 		Assignment assignment = new Assignment();
@@ -168,34 +172,58 @@ public class GradeBookController {
 		assignment.setName(name);
 		assignment.setDueDate(dueDate);
 		assignmentRepository.save(assignment);
+		}
+		else {
+			throw new ResponseStatusException( HttpStatus.UNAUTHORIZED, "Not Authorized. " );
+		}
 	}
+	
+	@GetMapping("/assignment/{assignmentId}")
+	@Transactional
+	public Assignment getAssignment(@PathVariable int assignmentId) {
+		Assignment assignment = assignmentRepository.findById(assignmentId);
+		
+		return assignment;
+	}
+	
 
-//	/* Change the name of the assignment for my course */
+	/* Change the name of the assignment for my course */
 	@PutMapping("/assignment/{assignmentId}")
 	@Transactional
 	public void changeAssignmentName(@PathVariable int assignmentId, @RequestParam String name) {
 		
+		String email = "dwisneski@csumb.edu";
+		
 		//Find assignment by ID
-		Assignment assignment = assignmentRepository.findById(assignmentId);
-
+		Assignment assignment = checkAssignment(assignmentId,email);
+		
+		if(assignment == null) {
+			throw new ResponseStatusException( HttpStatus.UNAUTHORIZED, "Not Authorized. " );
+		}
+		else {
 		//Update assignment name and save record
 		assignment.setName(name);
 		assignmentRepository.save(assignment);
+		}
 	}
 
-//	/* Delete an assignment for the course (only if there are no grades for the assignment) */
-//	@DeleteMapping("/assignment/{assignmentId}")
-//	@Transactional
-//	public void deleteAssignment(@PathVariable int assignmentId) {
-//		
-//		//Find assignment by ID
-//		Assignment assignment = assignmentRepository.findById(assignmentId);
-//
-//		//TODO: Check if assignment has no grades first before deletion
-//		
-//		//Delete assignment 
-//		assignmentRepository.delete(assignment);
-//	}
+	/* Delete an assignment for the course (only if there are no grades for the assignment) */
+	@DeleteMapping("/assignment/{assignmentId}")
+	@Transactional
+	public void deleteAssignment(@PathVariable int assignmentId) {
+		
+		String email = "dwisneski@csumb.edu";
+		
+		//Find assignment by ID
+		Assignment assignment = checkAssignment(assignmentId,email);
+		
+		if(assignment.getNeedsGrading() == 0) {
+			assignmentRepository.delete(assignment);
+		} else {
+			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Error, assignments with existing grades");
+		}
+		
+	}
 
 	
 	private Assignment checkAssignment(int assignmentId, String email) {
