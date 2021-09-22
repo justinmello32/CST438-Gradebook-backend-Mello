@@ -159,7 +159,7 @@ public class GradeBookController {
 	/* Add a new assignment for the course. The assignment has a name and a due date. */
 	@PostMapping("/assignment")
 	@Transactional
-	public void addNewAssignment (@RequestParam String name, @RequestParam Date dueDate) {
+	public void addNewAssignment (@RequestParam String name, @RequestParam Date dueDate, @RequestParam Course courseID) {
 		
 		String email = "dwisneski@csumb.edu"; //Hardcoded email
 		
@@ -171,6 +171,7 @@ public class GradeBookController {
 		//Set information, name and due date, then save record
 		assignment.setName(name);
 		assignment.setDueDate(dueDate);
+		assignment.setCourse(courseID);
 		assignmentRepository.save(assignment);
 		}
 		else {
