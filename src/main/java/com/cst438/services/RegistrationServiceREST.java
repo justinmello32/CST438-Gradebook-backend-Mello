@@ -5,6 +5,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.cst438.domain.CourseDTOG;
 
+//Assignment4
 public class RegistrationServiceREST extends RegistrationService {
 
 	
