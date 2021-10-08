@@ -36,6 +36,7 @@ public class EndToEndCreateAssignmentTest {
 	
 	public static final String TEST_ASSIGNMENT_NAME = "New Test Assignment";
 	public static final String TEST_ASSIGNMENT_DATE = "11-5-2021";
+	public static final int TEST_ASSIGNMENT_ID = 1;
 
 	@Autowired
 	EnrollmentRepository enrollmentRepository;
@@ -52,31 +53,14 @@ public class EndToEndCreateAssignmentTest {
 	@Test
 	public void createAssignmentTest() throws Exception {
 		 
-	      Course c = new Course();
-	      c.setCourse_id(40443);
-	      c.setInstructor(TEST_INSTRUCTOR_EMAIL);
-	      c.setSemester("Fall");
-	      c.setYear(2021);
-	      c.setTitle("Test Course");
 
-	      Assignment a = new Assignment();
-	      a.setCourse(c);
-	      a.setDueDate(new java.sql.Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
-	      a.setName("Test Assignment");
-	      a.setNeedsGrading(1);
-
-
-	      Enrollment e = new Enrollment();
-	      e.setCourse(c);
-	      e.setStudentEmail(TEST_USER_EMAIL);
-	      e.setStudentName("Test");
-
-	      //courseRepository.save(c);
-	      a = assignmentRepository.save(a);
-	      //e = enrollmentRepository.save(e);
-
-	      AssignmentGrade ag = null;
-		
+		//Deletes existing students in the database.
+        Assignment x = null;
+          do {
+              x = assignmentRepository.findById(1);
+              if (x != null)
+                  assignmentRepository.delete(x);
+          } while (x != null);
 		
 
 
@@ -115,20 +99,17 @@ public class EndToEndCreateAssignmentTest {
 			Thread.sleep(SLEEP_DURATION);
 
 			//Verify
-			ag = assignnmentGradeRepository.findByAssignmentIdAndStudentEmail(a.getId(), TEST_USER_EMAIL);
-			assertEquals(TEST_ASSIGNMENT_NAME, a.getName());
-			assertEquals(Date.valueOf(TEST_ASSIGNMENT_NAME), a.getDueDate());
+			Assignment a = assignmentRepository.findById(TEST_ASSIGNMENT_ID);
+			assertNotNull(a); 
 
 		} catch (Exception ex) {
 			throw ex;
 		} finally {
 
-			//Delete 
-            ag = assignnmentGradeRepository.findByAssignmentIdAndStudentEmail(a.getId(), TEST_USER_EMAIL);
-            if (ag!=null) assignnmentGradeRepository.delete(ag);
-            enrollmentRepository.delete(e);
-            assignmentRepository.delete(a);
-            courseRepository.delete(c);
+			//Clean up
+			Assignment a = assignmentRepository.findById(TEST_ASSIGNMENT_ID);
+			if(a !=null)
+				assignmentRepository.delete(a);
 	         
 			driver.quit();
 		}
