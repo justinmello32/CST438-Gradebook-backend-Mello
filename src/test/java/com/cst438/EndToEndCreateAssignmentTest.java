@@ -57,7 +57,7 @@ public class EndToEndCreateAssignmentTest {
 		//Deletes existing students in the database.
         Assignment x = null;
           do {
-              x = assignmentRepository.findById(1);
+              x = assignmentRepository.findById(TEST_ASSIGNMENT_ID);
               if (x != null)
                   assignmentRepository.delete(x);
           } while (x != null);
