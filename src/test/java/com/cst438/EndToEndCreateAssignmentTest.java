@@ -26,6 +26,7 @@ import com.cst438.domain.CourseRepository;
 import com.cst438.domain.Enrollment;
 import com.cst438.domain.EnrollmentRepository;
 
+@SpringBootTest
 public class EndToEndCreateAssignmentTest {
 	public static final String CHROME_DRIVER_FILE_LOCATION = "/Users/justinmello/Desktop/chromedriver";
 
@@ -36,6 +37,7 @@ public class EndToEndCreateAssignmentTest {
 	
 	public static final String TEST_ASSIGNMENT_NAME = "New Test Assignment";
 	public static final String TEST_ASSIGNMENT_DATE = "11-5-2021";
+	public static final int TEST_COURSE_ID = 40443;
 	public static final int TEST_ASSIGNMENT_ID = 1;
 
 	@Autowired
@@ -57,7 +59,7 @@ public class EndToEndCreateAssignmentTest {
 		//Deletes existing students in the database.
         Assignment x = null;
           do {
-              x = assignmentRepository.findById(TEST_ASSIGNMENT_ID);
+        	  x = assignmentRepository.findByCourseIdAndName(TEST_COURSE_ID, TEST_ASSIGNMENT_NAME);
               if (x != null)
                   assignmentRepository.delete(x);
           } while (x != null);
@@ -99,7 +101,7 @@ public class EndToEndCreateAssignmentTest {
 			Thread.sleep(SLEEP_DURATION);
 
 			//Verify
-			Assignment a = assignmentRepository.findById(TEST_ASSIGNMENT_ID);
+			Assignment a = assignmentRepository.findByCourseIdAndName(TEST_COURSE_ID, TEST_ASSIGNMENT_NAME);
 			assertNotNull(a); 
 
 		} catch (Exception ex) {
@@ -107,7 +109,7 @@ public class EndToEndCreateAssignmentTest {
 		} finally {
 
 			//Clean up
-			Assignment a = assignmentRepository.findById(TEST_ASSIGNMENT_ID);
+			Assignment a = assignmentRepository.findByCourseIdAndName(TEST_COURSE_ID, TEST_ASSIGNMENT_NAME);
 			if(a !=null)
 				assignmentRepository.delete(a);
 	         
